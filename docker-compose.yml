@@ -1,0 +1,25 @@
+version: '3'
+services:
+  mysql:
+    image: mysql:8.0.36
+    env_file: ./env/mysql.env
+    volumes:
+      - ./mysql-data:/var/lib/mysql
+    restart: unless-stopped
+    healthcheck:
+      test: mysqladmin ping -h 127.0.0.1 -u $$MYSQL_USER --password=$$MYSQL_PASSWORD
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build:
+      context: .
+    env_file: ./env/app.env
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+volumes:
+  mysql-data:
