@@ -20,5 +20,10 @@ services:
       mysql:
         condition: service_healthy
 
+  nginx:
+    image: nginx:stable-alpine
+    ports:
+      - "80:80"
+
 volumes:
   mysql-data:
